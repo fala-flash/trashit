@@ -16,7 +16,7 @@ export class LoginPage implements OnInit {
 
 
   enterApp(){
-    this.auth.googleLogin();
+    this.auth.doGoogleLogin();
   }
 
 }

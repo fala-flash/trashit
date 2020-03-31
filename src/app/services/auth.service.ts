@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { Platform } from '@ionic/angular';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,65 +10,51 @@ import { Platform } from '@ionic/angular';
 export class AuthService {
 
   constructor(
-    private router: Router,
-    private platform: Platform,
-    private google:GooglePlus,
-    private fireAuth: AngularFireAuth) { }
+    private googlePlus: GooglePlus,
+    private nativeStorage: NativeStorage,
+    private router: Router
+    ) { }
 
-    userDetails() {
-      return firebase.auth().currentUser;
-    }
-
-
-    async nativeGoogleLogin(): Promise<any> {
-      try {
-  
-        const gplusUser = await this.google.login({
-          'webClientId': '406013327564-mk437resim441qmpv4tulht3jjnidmej.apps.googleusercontent.com',
-          offline: true
-        });
-  
-        return await this.fireAuth.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken));
-  
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    async webGoogleLogin(): Promise<void> {
-      try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        const credential = await this.fireAuth.auth.signInWithPopup(provider);
-        this.router.navigate(['tabs/tab1']);
-      } catch (err) {
-        console.log(err);
-      }
-  
-    }
-
-    googleLogin() {
-      if (this.platform.is('android')) {
-        this.nativeGoogleLogin().then(
-          () => this.router.navigate(["tabs/tab1"])
-        );
-      } else {
-        this.webGoogleLogin();
-      }
-    }
-
-
-    googleLogout(){
-      return new Promise((resolve, reject) => {
-        if (this.fireAuth.auth.currentUser) {
-          this.google.logout();
-          this.fireAuth.auth.signOut()
-            .then(() => {
-              this.router.navigate(["/login"])
-              resolve();
-            }).catch((error) => {
-              reject();
-            });
-        }
+    async doGoogleLogin(){
+    
+      this.googlePlus.login({
+        'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+        'webClientId': '406013327564-mk437resim441qmpv4tulht3jjnidmej.apps.googleusercontent.com', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+        'offline': true // Optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+      })
+      .then(user =>{
+    
+        this.nativeStorage.setItem('google_user', {
+          name: user.displayName,
+          email: user.email
+        })
+        .then(() =>{
+          this.router.navigate(["/tabs/tab1"]);
+        }, error =>{
+          console.log(error);
+        })
+      }, err =>{
+        console.log(err)
       });
     }
+
+
+    doGoogleLogout(){
+      this.googlePlus.trySilentLogin({
+        'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+        'webClientId': '406013327564-mk437resim441qmpv4tulht3jjnidmej.apps.googleusercontent.com', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+        'offline': true // Optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+      });
+      this.googlePlus.logout()
+      .then(res =>{
+        //user logged out so we will remove him from the NativeStorage
+        this.nativeStorage.remove('google_user');
+        this.router.navigate(["/login"]);
+      }, err =>{
+        console.log(err);
+      })
+    }
+
+
+    
 }
