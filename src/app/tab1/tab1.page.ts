@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
@@ -11,16 +11,23 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 })
 export class Tab1Page implements OnInit {
 
-  user: any = {}
+  user: any = {};
+  userReady: boolean = false;
 
-  constructor(private router: Router,
+  constructor(
     private auth: AuthService,
     private nativeStorage: NativeStorage) {}
 
-  ngOnInit() {
-    this.nativeStorage.getItem("google_user").then(user => {
-      this.user.email = user.email;
-      this.user.displayName = user.name;
+ async ngOnInit() {
+    await this.nativeStorage.getItem("google_user").then(data => {
+      this.user = {
+        name: data.name,
+        email: data.email,
+        picture: data.picture
+      }
+      this.userReady = true;
+    }, error =>{
+      console.log(error);
     })
   }
 

@@ -8,17 +8,18 @@
 
 <ion-content [fullscreen]="true">
 
-    <div id="container" *ngIf="user">
+    <div id="container" *ngIf='userReady'>
         <div id="image-div">
-            <img id="myImg" src="../../assets/user.png" alt="">
+            <ion-img id="myImg" [src]="user.picture"></ion-img>
+            <br>
         </div>
-        <br>
+
 
         <p>email: {{user.email}}
         </p>
         <br>
 
-        <p>name: {{user.displayName}}
+        <p>name: {{user.name}}
         </p>
         <br>
 

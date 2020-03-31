@@ -26,7 +26,8 @@ export class AuthService {
     
         this.nativeStorage.setItem('google_user', {
           name: user.displayName,
-          email: user.email
+          email: user.email,
+          picture: user.imageUrl
         })
         .then(() =>{
           this.router.navigate(["/tabs/tab1"]);
