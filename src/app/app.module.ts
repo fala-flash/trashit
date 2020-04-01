@@ -15,6 +15,9 @@ import { AngularFireModule } from '@angular/fire';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { environment } from '../environments/environment';
 
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -26,6 +29,7 @@ import { environment } from '../environments/environment';
     SplashScreen,
     GooglePlus,
     NativeStorage,
+    BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

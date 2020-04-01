@@ -8,6 +8,18 @@
 
 <ion-content [fullscreen]="true">
     <div id="container">
-        testo Trash
+        <ion-button (click)="scanCode()">
+            <p>
+                Scan
+                <ion-icon name="scan-outline"></ion-icon>
+            </p>
+
+        </ion-button>
+
+        <div *ngIf="scannedData">
+            <p>
+                Scanned Code Text : <b>{{ scannedData }}</b>
+            </p>
+        </div>
     </div>
 </ion-content>

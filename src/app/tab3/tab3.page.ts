@@ -1,12 +1,60 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import {BarcodeScannerOptions, BarcodeScanner} from "@ionic-native/barcode-scanner/ngx";
+import { Platform } from "@ionic/angular";
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  selector: "app-tab3",
+  templateUrl: "tab3.page.html",
+  styleUrls: ["tab3.page.scss"]
 })
 export class Tab3Page {
 
-  constructor() {}
+  encodeData: any;
+  scannedData: any;
+  barcodeScannerOptions: BarcodeScannerOptions;
 
+  constructor( private platform: Platform, private barcodeScanner: BarcodeScanner ) {
+
+    this.barcodeScannerOptions = {
+      prompt: '', // Android
+      resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+      formats: 'UPC_A, UPC_E, EAN_8	, EAN_13',
+      orientation: 'portrait',
+      disableSuccessBeep: false
+    };
+
+  }
+
+  scanCode() {
+    this.barcodeScanner.scan(this.barcodeScannerOptions).then(barcodeData => {
+        if (barcodeData.cancelled) {
+          if (this.platform.is('android')) {
+            this.platform.backButton.subscribeWithPriority(101, () => {
+              event.preventDefault();
+            });
+          }
+        } else {
+          this.scannedData = barcodeData.text;
+          if (this.scannedData == '40329574') {
+            this.encodeData = "{'basket': 'paper'}";
+          } else {
+            this.encodeData = "{'basket': 'plastic'}";
+          }
+          this.createQr();
+        }
+    });
+  }
+
+  createQr() {
+    this.barcodeScanner
+      .encode(this.barcodeScanner.Encode.TEXT_TYPE, this.encodeData)
+      .then(
+        encodedData => {
+          this.encodeData = encodedData;
+        },
+        err => {
+          this.encodeData = err;
+        }
+      );
+  }
 }
