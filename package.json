@@ -23,6 +23,7 @@
         "@babel/compat-data": "7.8.0",
         "@ionic-native/barcode-scanner": "^5.23.0",
         "@ionic-native/ble": "^4.20.0",
+        "@ionic-native/bluetooth-le": "^5.23.0",
         "@ionic-native/core": "^5.0.0",
         "@ionic-native/google-plus": "^5.23.0",
         "@ionic-native/native-storage": "^5.23.0",
@@ -32,7 +33,7 @@
         "cordova-android": "^8.1.0",
         "cordova-plugin-androidx": "^1.0.2",
         "cordova-plugin-androidx-adapter": "^1.1.0",
-        "cordova-plugin-ble-central": "^1.2.4",
+        "cordova-plugin-bluetoothle": "^4.5.9",
         "cordova-plugin-googleplus": "^5.2.1",
         "cordova-plugin-nativestorage": "^2.3.2",
         "core-js": "^2.5.4",
@@ -94,7 +95,7 @@
             },
             "cordova-plugin-androidx": {},
             "cordova-plugin-androidx-adapter": {},
-            "cordova-plugin-ble-central": {}
+            "cordova-plugin-bluetoothle": {}
         },
         "platforms": [
             "android"

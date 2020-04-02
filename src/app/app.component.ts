@@ -6,7 +6,8 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { Router } from "@angular/router";
 
-import { BLE } from '@ionic-native/ble';
+import { BluetoothLE } from '@ionic-native/bluetooth-le/ngx';
+
 
 @Component({
   selector: "app-root",
@@ -20,7 +21,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     private nativeStorage: NativeStorage,
     private router: Router,
-    private ble: BLE
+    private bluetooth: BluetoothLE
   ) {
     this.initializeApp();
   }
@@ -36,9 +37,7 @@ export class AppComponent {
           this.router.navigate(["/tabs/tab1"]);
           this.splashScreen.hide();
           
-
-          //auto connect smartphone with iBean on Arduino Board
-          this.ble.autoConnect('9C:1D:58:90:C2:AA', this.onConnected.bind(this), this.onDisconnected.bind(this) );
+          this.bluetooth.enable();
 
           
         },
@@ -52,15 +51,5 @@ export class AppComponent {
   }
 
 
-  //callback executed on connection
-  onConnected(){
-    let data = new Uint8Array(1);
-    data[0] = 70;
-    this.ble.write('9C:1D:58:90:C2:AA', 'FFE0', 'FFE1', data.buffer )
-  }
-
-  //callback executed on disconnection
-  onDisconnected(){
-    console.log('Device Disconnected');
-  }
+  
 }
