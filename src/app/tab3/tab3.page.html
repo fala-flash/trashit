@@ -16,10 +16,24 @@
 
         </ion-button>
 
-        <div *ngIf="scannedData">
+        <!-- <div *ngIf="scannedData">
             <p>
                 Scanned Code Text : <b>{{ scannedData }}</b>
             </p>
+        </div> -->
+
+
+        <div *ngIf="encodeData">
+            <section>
+                <br>
+                <ngx-qrcode [(qrc-value)]="encodeData"></ngx-qrcode>
+                <!-- <br>
+                <p>{{encodeData}}</p> -->
+                <p><b>Show this QR to the QRCodeReader</b></p>
+            </section>
         </div>
+
+
+
     </div>
 </ion-content>

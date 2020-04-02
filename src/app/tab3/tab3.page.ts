@@ -19,8 +19,7 @@ export class Tab3Page {
       prompt: '', // Android
       resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
       formats: 'UPC_A, UPC_E, EAN_8	, EAN_13',
-      orientation: 'portrait',
-      disableSuccessBeep: false
+      orientation: 'portrait'
     };
 
   }
@@ -40,21 +39,10 @@ export class Tab3Page {
           } else {
             this.encodeData = "{'basket': 'plastic'}";
           }
-          this.createQr();
+          return this.encodeData;
         }
     });
   }
 
-  createQr() {
-    this.barcodeScanner
-      .encode(this.barcodeScanner.Encode.TEXT_TYPE, this.encodeData)
-      .then(
-        encodedData => {
-          this.encodeData = encodedData;
-        },
-        err => {
-          this.encodeData = err;
-        }
-      );
-  }
+
 }
