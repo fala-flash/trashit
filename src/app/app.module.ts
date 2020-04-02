@@ -18,6 +18,8 @@ import { environment } from '../environments/environment';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 
+import { BLE } from '@ionic-native/ble';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -30,6 +32,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
     GooglePlus,
     NativeStorage,
     BarcodeScanner,
+    BLE,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
