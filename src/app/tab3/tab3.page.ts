@@ -1,21 +1,23 @@
-import { Component } from "@angular/core";
+import { BluetoothService } from './../services/bluetooth.service';
+
+import { Component, OnInit } from "@angular/core";
 import {BarcodeScannerOptions, BarcodeScanner} from "@ionic-native/barcode-scanner/ngx";
 import { Platform } from "@ionic/angular";
-import { Router } from '@angular/router';
+
 
 @Component({
   selector: "app-tab3",
   templateUrl: "tab3.page.html",
   styleUrls: ["tab3.page.scss"]
 })
-export class Tab3Page {
+export class Tab3Page implements OnInit {
 
   encodeData: any;
   scannedData: any;
   barcodeScannerOptions: BarcodeScannerOptions;
 
   constructor( private platform: Platform, private barcodeScanner: BarcodeScanner,
-    private router: Router ) {
+     private bluetooth: BluetoothService ) {
 
     this.barcodeScannerOptions = {
       prompt: '', // Android
@@ -24,6 +26,11 @@ export class Tab3Page {
       orientation: 'portrait'
     };
 
+  }
+
+
+  ngOnInit(){
+    this.bluetooth.enableBluetooth();
   }
 
   scanCode() {
@@ -41,14 +48,12 @@ export class Tab3Page {
           } else {
             this.encodeData = "{'basket': 'plastic'}";
           }
+          this.bluetooth.Scan();
           return this.encodeData;
         }
     });
   }
 
-  bluetooth(){
-    this.router.navigate(["bluetooth"]);
-  }
 
 
 }

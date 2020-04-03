@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {  NgZone } from '@angular/core';
 import { BLE } from '@ionic-native/ble/ngx';
 import { ToastController } from '@ionic/angular';
@@ -7,15 +7,11 @@ import { ToastController } from '@ionic/angular';
 const serv = 'ffe0';
 const char = 'ffe1';
 
-@Component({
-  selector: 'app-bluetooth',
-  templateUrl: './bluetooth.page.html',
-  styleUrls: ['./bluetooth.page.scss'],
+@Injectable({
+  providedIn: 'root'
 })
+export class BluetoothService {
 
-
-
-export class BluetoothPage implements OnInit {
 
   devices:any[] = [];
 
@@ -25,7 +21,9 @@ export class BluetoothPage implements OnInit {
 
   constructor(private ble:BLE,private ngZone: NgZone, public toastController: ToastController) { }
 
-  ngOnInit() {
+
+
+  enableBluetooth(){
     this.ble.enable();
   }
 
@@ -87,8 +85,4 @@ export class BluetoothPage implements OnInit {
     var s: string = this.stringa.join('');
     return s;
   }
-
-
-
-
 }
