@@ -6,8 +6,6 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { Router } from "@angular/router";
 
-import { BluetoothLE } from '@ionic-native/bluetooth-le/ngx';
-
 
 @Component({
   selector: "app-root",
@@ -20,8 +18,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private nativeStorage: NativeStorage,
-    private router: Router,
-    private bluetooth: BluetoothLE
+    private router: Router
   ) {
     this.initializeApp();
   }
@@ -36,8 +33,7 @@ export class AppComponent {
           // we will let him access the app
           this.router.navigate(["/tabs/tab1"]);
           this.splashScreen.hide();
-          
-          this.bluetooth.enable();
+        
 
           
         },

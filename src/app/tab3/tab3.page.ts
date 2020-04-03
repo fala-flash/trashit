@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import {BarcodeScannerOptions, BarcodeScanner} from "@ionic-native/barcode-scanner/ngx";
 import { Platform } from "@ionic/angular";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-tab3",
@@ -13,7 +14,8 @@ export class Tab3Page {
   scannedData: any;
   barcodeScannerOptions: BarcodeScannerOptions;
 
-  constructor( private platform: Platform, private barcodeScanner: BarcodeScanner ) {
+  constructor( private platform: Platform, private barcodeScanner: BarcodeScanner,
+    private router: Router ) {
 
     this.barcodeScannerOptions = {
       prompt: '', // Android
@@ -42,6 +44,10 @@ export class Tab3Page {
           return this.encodeData;
         }
     });
+  }
+
+  bluetooth(){
+    this.router.navigate(["bluetooth"]);
   }
 
 

@@ -1,3 +1,6 @@
+import { BLE } from '@ionic-native/ble/ngx';
+
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -18,7 +21,9 @@ import { environment } from '../environments/environment';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 
-import { BluetoothLE } from '@ionic-native/bluetooth-le/ngx';
+
+
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +37,7 @@ import { BluetoothLE } from '@ionic-native/bluetooth-le/ngx';
     GooglePlus,
     NativeStorage,
     BarcodeScanner,
-    BluetoothLE,
+    BLE,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
