@@ -61,16 +61,17 @@ export class BluetoothPage implements OnInit {
 
   OnConnectionSuccesfull(data: any) {
     this.ble.startNotification(data.id, serv, char).subscribe(res => {
-      this.presentToastConnected('sono in ascolto');
       this.onDataChanged(res);
-    })
+    }, err => this.presentToastConnected(err))
   }
 
 
   onDataChanged(res: ArrayBuffer) {
-    var value = new Uint32Array(res);
+    var value = new Uint8Array(res);
     this.presentToastConnected(value[0]);
   }
+
+
 
 
 }
