@@ -3,15 +3,21 @@ import {  NgZone } from '@angular/core';
 import { BLE } from '@ionic-native/ble/ngx';
 import { ToastController } from '@ionic/angular';
 
+
+const serv = 'ffe0';
+const char = 'ffe1';
+
 @Component({
   selector: 'app-bluetooth',
   templateUrl: './bluetooth.page.html',
   styleUrls: ['./bluetooth.page.scss'],
 })
+
+
+
 export class BluetoothPage implements OnInit {
 
   devices:any[] = [];
-  deviceId : '9C:1D:58:90:C2:AA';
 
   constructor(private ble:BLE,private ngZone: NgZone, public toastController: ToastController) { }
 
@@ -19,48 +25,51 @@ export class BluetoothPage implements OnInit {
     this.ble.enable();
   }
 
-  async presentToastConnected() {
+  async presentToastConnected(msg) {
     const toast = await this.toastController.create({
-      message: `connected to 9C:1D:58:90:C2:AA`,
+      message: msg,
       duration: 2000
     });
     toast.present();
   }
 
-  async presentToastDisconnected() {
-    const toast = await this.toastController.create({
-      message: `disconnected from 9C:1D:58:90:C2:AA`,
-      duration: 2000
-    });
-    toast.present();
-  }
-
-  onConnected(){
-    this.presentToastConnected();
-  }
-
-  onDisconnected(){
-    this.presentToastDisconnected();
-  }
+  
 
   Scan(){
     this.devices = [];
     this.ble.scan([],15).subscribe(
       device => this.onDeviceDiscovered(device)
     );
-
-    this.autoconnect();
+      
   }
   onDeviceDiscovered(device){
     console.log('Discovered' + JSON.stringify(device,null,2));
     this.ngZone.run(()=>{
       this.devices.push(device)
-      console.log(device)
+      if (device.id === '9C:1D:58:90:C2:AA') {
+        this.connect();
+      }
     })
   }
 
-  autoconnect(){
-    this.ble.autoConnect('9C:1D:58:90:C2:AA', this.onConnected, this.onDisconnected);
+  connect(){
+    this.ble.connect('9C:1D:58:90:C2:AA').subscribe(data => {
+      this.OnConnectionSuccesfull(data);
+    });
+  }
+
+
+  OnConnectionSuccesfull(data: any) {
+    this.ble.startNotification(data.id, serv, char).subscribe(res => {
+      this.presentToastConnected('sono in ascolto');
+      this.onDataChanged(res);
+    })
+  }
+
+
+  onDataChanged(res: ArrayBuffer) {
+    var value = new Uint32Array(res);
+    this.presentToastConnected(value[0]);
   }
 
 
