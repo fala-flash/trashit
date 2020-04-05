@@ -48,7 +48,7 @@ export class Tab3Page implements OnInit {
           } else {
             this.encodeData = "{'basket': 'plastic'}";
           }
-          this.bluetooth.Scan();
+          this.bluetooth.sendMessage();
           return this.encodeData;
         }
     });

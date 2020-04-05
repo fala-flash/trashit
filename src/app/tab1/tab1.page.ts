@@ -1,3 +1,4 @@
+import { BluetoothService } from './../services/bluetooth.service';
 
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
@@ -16,7 +17,8 @@ export class Tab1Page implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private nativeStorage: NativeStorage) {}
+    private nativeStorage: NativeStorage,
+    private bluetooth: BluetoothService) {}
 
  async ngOnInit() {
     await this.nativeStorage.getItem("google_user").then(data => {
@@ -29,10 +31,13 @@ export class Tab1Page implements OnInit {
     }, error =>{
       console.log(error);
     })
+    this.bluetooth.enableBluetooth();
+    this.bluetooth.sendMessage();
   }
 
   exitApp(){
     this.auth.doGoogleLogout();
   }
+
 
 }

@@ -4,8 +4,10 @@ import { BLE } from '@ionic-native/ble/ngx';
 import { ToastController } from '@ionic/angular';
 
 
+const mac = '9C:1D:58:90:C2:AA';
 const serv = 'ffe0';
 const char = 'ffe1';
+
 
 @Injectable({
   providedIn: 'root'
@@ -48,20 +50,21 @@ export class BluetoothService {
     console.log('Discovered' + JSON.stringify(device,null,2));
     this.ngZone.run(()=>{
       this.devices.push(device)
-      if (device.id === '9C:1D:58:90:C2:AA') {
+      if (device.id === mac) {
         this.connect();
       }
     })
   }
 
   connect(){
-    this.ble.connect('9C:1D:58:90:C2:AA').subscribe(data => {
+    this.ble.connect(mac).subscribe(data => {
       this.OnConnectionSuccesfull(data);
     });
   }
 
 
   OnConnectionSuccesfull(data: any) {
+    this.message();
     this.ble.startNotification(data.id, serv, char).subscribe(res => {
       this.onDataChanged(res);
     }, err => this.presentToastConnected(err))
@@ -76,7 +79,10 @@ export class BluetoothService {
     }
     else if (this.num == 4 || value[0] == 10) {
       this.num = 0;
-      this.presentToastConnected(this.generateString());
+      this.ble.disconnect(mac).then(() => {
+        this.presentToastConnected(this.generateString());
+      });;
+      
     }
 
   }
@@ -85,4 +91,22 @@ export class BluetoothService {
     var s: string = this.stringa.join('');
     return s;
   }
+
+
+  sendMessage(){
+    this.ble.isConnected(mac).then(() => {
+      this.message();
+    }, () => {
+      this.Scan();
+    })  
+  }
+
+  message(){
+    var data = new Uint8Array(1);
+    data[0] = 111;
+    this.ble.write(mac, serv, char, data.buffer).then(() => {
+      console.log('hello arduino');
+    })
+  }
+
 }

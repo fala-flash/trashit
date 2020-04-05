@@ -32,10 +32,7 @@ export class AppComponent {
           // user is previously logged and we have his data
           // we will let him access the app
           this.router.navigate(["/tabs/tab1"]);
-          this.splashScreen.hide();
-        
-
-          
+          this.splashScreen.hide();          
         },
         error => {
           this.router.navigate(["/login"]);
