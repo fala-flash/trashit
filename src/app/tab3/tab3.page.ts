@@ -44,9 +44,9 @@ export class Tab3Page implements OnInit {
         } else {
           this.scannedData = barcodeData.text;
           if (this.scannedData == '40329574') {
-            this.encodeData = "{'basket': 'paper'}";
+            this.encodeData = `{"basket":"paper"}`; 
           } else {
-            this.encodeData = "{'basket': 'plastic'}";
+            this.encodeData = `{"basket":"plastic"}`;
           }
           this.bluetooth.sendMessage();
           return this.encodeData;
