@@ -1,23 +1,24 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Injectable } from "@angular/core";
 
-const notifyString: string = "p0c1";
+
 
 @Component({
   selector: "app-tab2",
   templateUrl: "tab4.page.html",
   styleUrls: ["tab4.page.scss"],
 })
+@Injectable({
+  providedIn: 'root'
+})
+
 export class Tab4Page implements OnInit {
   plasticStatus: string = "";
   paperStatus: string = "";
 
   constructor() {}
-  ngOnInit(): void {
-    this.getPlasticStatus();
-    this.getPaperStatus();
-  }
+  ngOnInit(): void {  }
 
-  getPlasticStatus(): string {
+  getPlasticStatus(notifyString): string {
     if (notifyString[1] == "0") {
       this.plasticStatus = "Empty";
     } else if (notifyString[1] == "2") {
@@ -28,7 +29,7 @@ export class Tab4Page implements OnInit {
     return this.plasticStatus;
   }
 
-  getPaperStatus(): string {
+  getPaperStatus(notifyString): string {
     if (notifyString[3] == "0") {
       this.paperStatus = "Empty";
     } else if (notifyString[3] == "2") {

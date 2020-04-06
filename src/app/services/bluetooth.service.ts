@@ -1,3 +1,4 @@
+import { Tab4Page } from './../tab4/tab4.page';
 import { Injectable } from '@angular/core';
 import {  NgZone } from '@angular/core';
 import { BLE } from '@ionic-native/ble/ngx';
@@ -21,7 +22,7 @@ export class BluetoothService {
 
   num: number = 0;
 
-  constructor(private ble:BLE,private ngZone: NgZone, public toastController: ToastController) { }
+  constructor(private ble:BLE,private ngZone: NgZone, public toastController: ToastController, private status: Tab4Page) { }
 
 
 
@@ -81,6 +82,8 @@ export class BluetoothService {
       this.num = 0;
       this.ble.disconnect(mac).then(() => {
         this.presentToastConnected(this.generateString());
+        this.status.getPaperStatus(this.generateString());
+        this.status.getPlasticStatus(this.generateString());
       });;
       
     }

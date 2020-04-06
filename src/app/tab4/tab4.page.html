@@ -8,15 +8,15 @@
 
 <ion-content [fullscreen]="true">
     <div id="container">
-        <p *ngIf="paperStatus">
+        <p>
             <ion-icon name="trash-outline"></ion-icon>
-            <b>Paper Basket Status</b>: <i>{{paperStatus}}</i>
+            <b>Paper Basket Status</b>: <i *ngIf="paperStatus">{{paperStatus}}</i>
         </p>
         <br>
 
-        <p *ngIf="plasticStatus">
+        <p>
             <ion-icon name="trash-outline"></ion-icon>
-            <b>Plastic Basket Status</b>: <i>{{plasticStatus}}</i>
+            <b>Plastic Basket Status</b>: <i *ngIf="plasticStatus">{{plasticStatus}}</i>
         </p>
     </div>
 </ion-content>
