@@ -79,15 +79,22 @@ export class BluetoothService {
     } else if (this.num == 4 || value[0] == 10) {
       this.num = 0;
       this.ble.disconnect(mac).then(() => {
-        this.presentToastConnected(this.generateString());
+        this.decodeString();
       });
     }
   }
 
-  generateString(): string {
-    var s: string = this.stringa.join("");
-    return s;
-  }
+  decodeString(): void{
+    for (let index = 0; index < this.stringa.length; index++) {
+      if (index != 0) {
+        if (this.stringa[index-1] == 'p') {
+          this.setPlasticStatus(this.stringa[index]);
+        } else if (this.stringa[index-1] == 'c') {
+          this.setPaperStatus(this.stringa[index]);
+        }
+      }      
+    }
+  } 
 
   sendMessage() {
     this.ble.isConnected(mac).then(
@@ -106,6 +113,14 @@ export class BluetoothService {
     this.ble.write(mac, serv, char, data.buffer).then(() => {
       console.log("hello arduino");
     });
+  }
+
+  public setPaperStatus(status: number) {
+    this.PAPERSTATUSSUBJECT.next(status);
+  }
+
+  public setPlasticStatus(status: number){
+    this.PLASTICSTATUSSUBJECT.next(status);
   }
 
   public getPaperStatus(): Observable<number> {
