@@ -10,13 +10,17 @@
     <div id="container">
         <p>
             <ion-icon name="trash-outline"></ion-icon>
-            <b>Paper Basket Status</b>: <i *ngIf="paperStatus">{{paperStatus}}</i>
+            <b>Paper Basket Status</b>:
+            <i *ngIf="paperStatus">{{paperStatus}}</i>
+            <i *ngIf="!paperStatus">Loading info ..</i>
         </p>
         <br>
 
         <p>
             <ion-icon name="trash-outline"></ion-icon>
-            <b>Plastic Basket Status</b>: <i *ngIf="plasticStatus">{{plasticStatus}}</i>
+            <b>Plastic Basket Status</b>:
+            <i *ngIf="plasticStatus">{{plasticStatus}}</i>
+            <i *ngIf="!plasticStatus">Loading info ..</i>
         </p>
     </div>
 </ion-content>
