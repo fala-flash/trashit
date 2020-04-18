@@ -18,21 +18,32 @@ export class Tab4Page implements OnInit {
 
   getPaperStatus() {
     this.bleService.getPaperStatus().subscribe((status) => {
-      switch (status) {
+      var x: number = + status;
+      console.log(x);
+
+      switch (x) {
         case 0:
           this.paperStatus = "Empty";
+          console.log('Empty');
+          
           break;
 
         case 1:
           this.paperStatus = "50% Full";
+          console.log('50');
+          
           break;
 
         case 2:
           this.paperStatus = "Full";
+          console.log('full');
+          
           break;
 
         default: 
         this.paperStatus = 'Info not available';
+        console.log('default');
+        
         break;
       }
     });
@@ -40,7 +51,10 @@ export class Tab4Page implements OnInit {
 
   getPlasticStatus() {
     this.bleService.getPlasticStatus().subscribe((status) => {
-      switch (status) {
+      var x: number = + status;
+      console.log(x);
+      
+      switch (x) {
         case 0:
           this.plasticStatus = "Empty";
           break;
