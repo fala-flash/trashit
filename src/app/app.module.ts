@@ -1,3 +1,4 @@
+
 import { BLE } from '@ionic-native/ble/ngx';
 
 
@@ -22,15 +23,16 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 
-
+import { ProductModalPage } from './product-modal/product-modal.page';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, ProductModalPage],
+  entryComponents: [ProductModalPage],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, 
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule, NgxQRCodeModule],
+    AngularFireAuthModule, NgxQRCodeModule, FormsModule],
   providers: [
     StatusBar,
     SplashScreen,

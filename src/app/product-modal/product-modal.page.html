@@ -1,0 +1,57 @@
+<ion-header>
+
+    <ion-toolbar>
+        <ion-title>ModalPage</ion-title>
+        <ion-button slot="end" color="danger" (click)="closeModal()">Close</ion-button>
+    </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <form (submit)="onSendSubmit()" class="form-signin">
+
+        <ion-item>
+            <ion-label position="stacked">Barcode</ion-label>
+            <ion-input type="number" [(ngModel)]="barcode" name="barcode"></ion-input>
+        </ion-item>
+        <br>
+
+        <ion-item>
+            <ion-label position="stacked">Name</ion-label>
+            <ion-input type="text" [(ngModel)]="productName" name="productName"></ion-input>
+        </ion-item>
+        <br>
+
+        <div style="margin-left: 1rem;">
+            <div>
+                <input type="radio" name="type" value="Plastic" [(ngModel)]="productType" id="plastic">
+                <label style="font-size: large;" for="plastic">Plastic</label>
+            </div>
+            <br>
+
+            <div>
+                <input type="radio" name="type" value="Paper" [(ngModel)]="productType" id="paper">
+                <label style="font-size: large;" for="paper">Paper</label>
+            </div>
+        </div>
+
+
+        <br>
+
+        <ion-button color="primary" type='submit'>Send</ion-button>
+
+    </form>
+
+
+    <div *ngIf="listReady">
+        <h6>Product sent to database</h6>
+        <ul>
+            <li>Barcode: {{code}}</li>
+            <li>Name: {{name}}</li>
+            <li>Type: {{type}}</li>
+        </ul>
+    </div>
+
+</ion-content>

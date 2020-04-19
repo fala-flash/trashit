@@ -4,6 +4,10 @@ import { Component, OnInit } from "@angular/core";
 import {BarcodeScannerOptions, BarcodeScanner} from "@ionic-native/barcode-scanner/ngx";
 import { Platform } from "@ionic/angular";
 
+import { ModalController } from "@ionic/angular";
+import { ProductModalPage } from './../product-modal/product-modal.page';
+
+
 
 @Component({
   selector: "app-tab3",
@@ -17,7 +21,7 @@ export class Tab3Page implements OnInit {
   barcodeScannerOptions: BarcodeScannerOptions;
 
   constructor( private platform: Platform, private barcodeScanner: BarcodeScanner,
-     private bluetooth: BluetoothService ) {
+     private bluetooth: BluetoothService, public modalCtrl: ModalController ) {
 
     this.barcodeScannerOptions = {
       prompt: '', // Android
@@ -53,6 +57,14 @@ export class Tab3Page implements OnInit {
         }
     });
   }
+
+
+  public async addProduct(){
+    var modalPage = await this.modalCtrl.create({component: ProductModalPage});
+    modalPage.present();
+  }
+
+  
 
 
 
