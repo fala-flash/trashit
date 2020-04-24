@@ -4,9 +4,10 @@ import { BLE } from "@ionic-native/ble/ngx";
 import { ToastController } from "@ionic/angular";
 import { BehaviorSubject, Observable } from "rxjs";
 
-const mac = "9C:1D:58:90:C2:AA";
+const mac = "9C:1D:58:90:C2:AA"; //va cancellato e bisogna assegnargli il mac dal db
 const serv = "ffe0";
 const char = "ffe1";
+
 
 @Injectable({
   providedIn: "root",
@@ -56,6 +57,8 @@ export class BluetoothService {
   }
 
   connect() {
+    //bisogna fare connesione al database per ottenere il mac address per connettersi
+    //di conseguenza abbiamo anche bisogno della geolocalizzazione
     this.ble.connect(mac).subscribe((data) => {
       this.OnConnectionSuccesfull(data);
     });

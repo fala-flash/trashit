@@ -47,11 +47,14 @@ export class Tab3Page implements OnInit {
           }
         } else {
           this.scannedData = barcodeData.text;
-          if (this.scannedData == '40329574') {
-            this.encodeData = `{"basket":"paper"}`; 
-          } else {
-            this.encodeData = `{"basket":"plastic"}`;
-          }
+
+
+          //va aggiunto il check su db
+
+          //se il prodotto non c'è, bisogna prendere la stringa del barcode e aprire modal di aggiunta
+
+
+          //nel modal di aggiunta quando premo send va inviato veramente al database
           this.bluetooth.sendMessage();
           return this.encodeData;
         }
