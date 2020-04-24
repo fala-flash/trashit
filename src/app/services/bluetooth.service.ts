@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { GeolocationService } from './geolocation.service';
+import { DatabaseService } from './database.service';
+import { Injectable, OnInit } from "@angular/core";
 import { NgZone } from "@angular/core";
 import { BLE } from "@ionic-native/ble/ngx";
 import { ToastController } from "@ionic/angular";
@@ -12,7 +14,7 @@ const char = "ffe1";
 @Injectable({
   providedIn: "root",
 })
-export class BluetoothService {
+export class BluetoothService implements OnInit {
   devices: any[] = [];
 
   stringa: any[] = [4];
@@ -22,11 +24,21 @@ export class BluetoothService {
   private PAPERSTATUSSUBJECT = new BehaviorSubject<number>(0);
   private PLASTICSTATUSSUBJECT = new BehaviorSubject<number>(0);
 
+  geoAddress: string = null;
+
   constructor(
     private ble: BLE,
     private ngZone: NgZone,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private geolocation: GeolocationService,
+    private database: DatabaseService
   ) {}
+
+  ngOnInit(): void {
+    this.getAddressSubscription().subscribe(data => {
+      this.geoAddress = data;
+    });
+  }
 
   enableBluetooth() {
     this.ble.enable();
@@ -56,12 +68,25 @@ export class BluetoothService {
     });
   }
 
+  getGeolocation() {
+    this.geolocation.getGeolocation();
+  }
+
+  getAddressSubscription() {
+    return this.geolocation.getAddressSubscription();
+  }
+
   connect() {
-    //bisogna fare connesione al database per ottenere il mac address per connettersi
-    //di conseguenza abbiamo anche bisogno della geolocalizzazione
-    this.ble.connect(mac).subscribe((data) => {
-      this.OnConnectionSuccesfull(data);
-    });
+
+    this.getGeolocation();
+
+    this.database.getBasketByLocation(this.geoAddress).subscribe(
+      mac => {
+        this.ble.connect(mac['mac']).subscribe((data) => {
+          this.OnConnectionSuccesfull(data);
+        })
+      }
+    )
   }
 
   OnConnectionSuccesfull(data: any) {
