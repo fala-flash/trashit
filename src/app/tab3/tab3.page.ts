@@ -1,3 +1,5 @@
+import { DatabaseService } from './../services/database.service';
+import { GeolocationService } from './../services/geolocation.service';
 import { BluetoothService } from './../services/bluetooth.service';
 
 import { Component, OnInit } from "@angular/core";
@@ -20,8 +22,13 @@ export class Tab3Page implements OnInit {
   scannedData: any;
   barcodeScannerOptions: BarcodeScannerOptions;
 
+
+  geoAddress: string = null;
+
   constructor( private platform: Platform, private barcodeScanner: BarcodeScanner,
-     private bluetooth: BluetoothService, public modalCtrl: ModalController ) {
+     private bluetooth: BluetoothService, public modalCtrl: ModalController,
+     private geolocation: GeolocationService,
+     private database: DatabaseService ) {
 
     this.barcodeScannerOptions = {
       prompt: '', // Android
@@ -35,6 +42,7 @@ export class Tab3Page implements OnInit {
 
   ngOnInit(){
     this.bluetooth.enableBluetooth();
+    this.getAddressSubscription();
   }
 
   scanCode() {
@@ -47,27 +55,36 @@ export class Tab3Page implements OnInit {
           }
         } else {
           this.scannedData = barcodeData.text;
+          this.database.getProductTypeByBarcode(this.scannedData).subscribe(material => {
+            this.encodeData = `{"basket":"${material}"}`;
+            return this.encodeData;
+          }, error => {
+            if (error.status == 404) {
+              this.addProduct(this.scannedData)
+            }
+          });
 
-
-          //va aggiunto il check su db
-
-          //se il prodotto non c'è, bisogna prendere la stringa del barcode e aprire modal di aggiunta
-
-
-          //nel modal di aggiunta quando premo send va inviato veramente al database
           this.bluetooth.sendMessage();
-          return this.encodeData;
         }
     });
   }
 
 
-  public async addProduct(){
-    var modalPage = await this.modalCtrl.create({component: ProductModalPage});
+  public async addProduct(barcode){
+    var modalPage = await this.modalCtrl.create({component: ProductModalPage, componentProps: {barcodeParams:barcode}});
     modalPage.present();
   }
 
-  
+  getGeolocation() {
+    this.geolocation.getGeolocation();
+  }
+
+  getAddressSubscription() {
+    this.geolocation.getAddressSubscription()
+        .subscribe(address => {
+          this.geoAddress = address;
+        });
+  }
 
 
 

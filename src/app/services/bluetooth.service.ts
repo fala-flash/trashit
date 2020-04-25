@@ -82,6 +82,7 @@ export class BluetoothService implements OnInit {
 
     this.database.getBasketByLocation(this.geoAddress).subscribe(
       mac => {
+        console.log(mac['mac']);
         this.ble.connect(mac['mac']).subscribe((data) => {
           this.OnConnectionSuccesfull(data);
         })

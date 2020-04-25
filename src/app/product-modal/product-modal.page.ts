@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from "@ionic/angular";
+import { ModalController, NavParams } from "@ionic/angular";
 import { ToastController } from "@ionic/angular";
+import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-product-modal',
@@ -21,7 +22,9 @@ export class ProductModalPage implements OnInit {
   type: string;
   
 
-  constructor(public modalCtrl: ModalController, public toastController: ToastController) { }
+  constructor(public modalCtrl: ModalController, public toastController: ToastController, private navParams: NavParams, private database: DatabaseService) {
+    this.barcode = this.navParams.get('barcodeParams');
+   }
 
   ngOnInit() {
   }
@@ -39,20 +42,25 @@ export class ProductModalPage implements OnInit {
 
   onSendSubmit(){
     const productInfo = {
-      barcode: this.barcode,
-      productName: this.productName,
-      productType: this.productType
+      Description: this.productName,
+      Material: this.productType,
+      Barcode: this.barcode
     }
 
-    if (productInfo.barcode == undefined || productInfo.productName == undefined || productInfo.productType == undefined) {
+    if (productInfo.Barcode == undefined || productInfo.Description == undefined || productInfo.Material == undefined) {
       this.presentToast('Every Field Must Be Completed');
       
     } else {
-      this.code = productInfo.barcode;
-      this.name = productInfo.productName;
-      this.type = productInfo.productType;
+      this.code = productInfo.Barcode;
+      this.name = productInfo.Description;
+      this.type = productInfo.Material;
       this.listReady = true;
-      this.presentToast('Product Added');
+      //database add
+      this.database.addProduct(productInfo).subscribe(() => {
+        this.presentToast('Product Added');
+      }, error => {
+        this.presentToast(error);
+      });
     }  
     
   }
