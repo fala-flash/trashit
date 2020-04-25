@@ -31,8 +31,11 @@ export class Tab1Page implements OnInit {
     }, error =>{
       console.log(error);
     })
-    this.bluetooth.enableBluetooth();
-    this.bluetooth.sendMessage();
+    this.bluetooth.initialize().then(() => {
+      console.log('Initialize done');
+      this.bluetooth.enableBluetooth();
+      this.bluetooth.sendMessage();
+    });
   }
 
   exitApp(){

@@ -1,11 +1,11 @@
 import { GeolocationService } from './geolocation.service';
 import { DatabaseService } from './database.service';
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { NgZone } from "@angular/core";
 import { BLE } from "@ionic-native/ble/ngx";
 import { ToastController } from "@ionic/angular";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+
 
 
 const serv = "ffe0";
@@ -15,7 +15,7 @@ const char = "ffe1";
 @Injectable({
   providedIn: "root",
 })
-export class BluetoothService implements OnInit {
+export class BluetoothService {
 
 
   mac: string = null;
@@ -39,23 +39,20 @@ export class BluetoothService implements OnInit {
     private database: DatabaseService
   ) {}
 
-  ngOnInit(): void {
 
-    /* ho messo il getGeolocation nell'ngOnInit prima del getAddressSubscription in modo che 
-    il geoAddress abbia effettivamente un valore, prima rimaneva null perchè era inizializzato a null.
-    ho spostato il metodo del getBasketByLocation nell'ngOnInit in modo che io abbia subito il mac address da utilizzare
-    in tutte le varie connessioni (usavano ancora tutte il mac address hardcodato, ora no).
-    */
 
-    this.getGeolocation();
-    this.getAddressSubscription().subscribe(data => {
-      this.geoAddress = data;
-    });
-
-    this.database.getBasketByLocation(this.geoAddress).subscribe(macdata => {
-      this.mac = macdata['mac'];
-      console.log(this.mac);
-      
+   async initialize(){
+    await this.geolocation.getGeolocation().then(status => {
+      if (status) {
+        this.getAddressSubscription().subscribe(data => {
+          this.geoAddress = data;
+          console.log(this.geoAddress);
+          this.database.getBasketByLocation(this.geoAddress).subscribe(macdata => {
+            this.mac = macdata['mac'];
+            console.log(this.mac);
+          })
+        });
+      } 
     })
   }
 
@@ -87,9 +84,7 @@ export class BluetoothService implements OnInit {
     });
   }
 
-  getGeolocation() {
-    this.geolocation.getGeolocation();
-  }
+  
 
   getAddressSubscription() {
     return this.geolocation.getAddressSubscription();

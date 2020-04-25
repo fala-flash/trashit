@@ -1,3 +1,4 @@
+import { BluetoothService } from './services/bluetooth.service';
 import { Component } from "@angular/core";
 
 import { Platform } from "@ionic/angular";
@@ -18,7 +19,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private nativeStorage: NativeStorage,
-    private router: Router
+    private router: Router,
+    private bluetooth: BluetoothService
   ) {
     this.initializeApp();
   }
@@ -32,6 +34,7 @@ export class AppComponent {
           // user is previously logged and we have his data
           // we will let him access the app
           this.router.navigate(["/tabs/tab1"]);
+          /* this.bluetooth.initialize(); */
           this.splashScreen.hide();          
         },
         error => {

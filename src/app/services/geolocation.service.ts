@@ -22,14 +22,17 @@ export class GeolocationService {
   }
 
   // Get current coordinates of device
-  getGeolocation() {
-    this.geolocation.getCurrentPosition().then((resp) => {
+ async getGeolocation() {
+   var status: boolean = false;
+   await this.geolocation.getCurrentPosition().then((resp) => {
     this.geoLatitude = resp.coords.latitude;
     this.geoLongitude = resp.coords.longitude;
     this.geoAccuracy = resp.coords.accuracy;
     this.getGeoencoder(this.geoLatitude, this.geoLongitude);
+    status = true;
     }, (error) => { alert('Error getting location' + JSON.stringify(error)); }
     );
+    return status;
   }
 
   // geocoder method to fetch address from coordinates passed as arguments
