@@ -5,8 +5,9 @@ import { NgZone } from "@angular/core";
 import { BLE } from "@ionic-native/ble/ngx";
 import { ToastController } from "@ionic/angular";
 import { BehaviorSubject, Observable } from "rxjs";
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
-const mac = "9C:1D:58:90:C2:AA"; //va cancellato e bisogna assegnargli il mac dal db
+
 const serv = "ffe0";
 const char = "ffe1";
 
@@ -15,6 +16,10 @@ const char = "ffe1";
   providedIn: "root",
 })
 export class BluetoothService implements OnInit {
+
+
+  mac: string = null;
+
   devices: any[] = [];
 
   stringa: any[] = [4];
@@ -35,9 +40,21 @@ export class BluetoothService implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    /* ho messo il getGeolocation nell'ngOnInit prima del getAddressSubscription in modo che 
+    il geoAddress abbia effettivamente un valore, prima rimaneva null perchè era inizializzato a null.
+    ho spostato il metodo del getBasketByLocation nell'ngOnInit in modo che io abbia subito il mac address da utilizzare
+    in tutte le varie connessioni (usavano ancora tutte il mac address hardcodato, ora no).
+    */
+
+    this.getGeolocation();
     this.getAddressSubscription().subscribe(data => {
       this.geoAddress = data;
     });
+
+    this.database.getBasketByLocation(this.geoAddress).subscribe(macdata => {
+      this.mac = macdata['mac'];
+    })
   }
 
   enableBluetooth() {
@@ -62,7 +79,7 @@ export class BluetoothService implements OnInit {
     console.log("Discovered" + JSON.stringify(device, null, 2));
     this.ngZone.run(() => {
       this.devices.push(device);
-      if (device.id === mac) {
+      if (device.id === this.mac) {
         this.connect();
       }
     });
@@ -77,17 +94,9 @@ export class BluetoothService implements OnInit {
   }
 
   connect() {
-
-    this.getGeolocation();
-
-    this.database.getBasketByLocation(this.geoAddress).subscribe(
-      mac => {
-        console.log(mac['mac']);
-        this.ble.connect(mac['mac']).subscribe((data) => {
+        this.ble.connect(this.mac).subscribe((data) => {
           this.OnConnectionSuccesfull(data);
         })
-      }
-    )
   }
 
   OnConnectionSuccesfull(data: any) {
@@ -107,7 +116,7 @@ export class BluetoothService implements OnInit {
       this.num++;
     } else if (this.num == 4 || value[0] == 10) {
       this.num = 0;
-      this.ble.disconnect(mac).then(() => {
+      this.ble.disconnect(this.mac).then(() => {
         this.decodeString();
       });
     }
@@ -126,7 +135,7 @@ export class BluetoothService implements OnInit {
   } 
 
   sendMessage() {
-    this.ble.isConnected(mac).then(
+    this.ble.isConnected(this.mac).then(
       () => {
         this.message();
       },
@@ -139,7 +148,7 @@ export class BluetoothService implements OnInit {
   message() {
     var data = new Uint8Array(1);
     data[0] = 111;
-    this.ble.write(mac, serv, char, data.buffer).then(() => {
+    this.ble.write(this.mac, serv, char, data.buffer).then(() => {
       console.log("hello arduino");
     });
   }
