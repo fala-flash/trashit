@@ -40,20 +40,16 @@ export class BluetoothService {
   ) {}
 
 
+  public setMac(macaddress){
+    this.mac = macaddress;
+  }
 
    async initialize(){
-    await this.geolocation.getGeolocation().then(status => {
-      if (status) {
-        this.getAddressSubscription().subscribe(data => {
-          this.geoAddress = data;
-          console.log(this.geoAddress);
-          this.database.getBasketByLocation(this.geoAddress).subscribe(macdata => {
-            this.mac = macdata['mac'];
-            console.log(this.mac);
-          })
-        });
-      } 
+     var status: boolean = false;
+    await this.geolocation.getGeolocation().then(s => {
+      status = s;
     })
+    return status;
   }
 
   enableBluetooth() {

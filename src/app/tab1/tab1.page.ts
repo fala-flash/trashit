@@ -1,3 +1,4 @@
+import { DatabaseService } from './../services/database.service';
 import { BluetoothService } from './../services/bluetooth.service';
 
 import { Component, OnInit } from '@angular/core';
@@ -18,7 +19,8 @@ export class Tab1Page implements OnInit {
   constructor(
     private auth: AuthService,
     private nativeStorage: NativeStorage,
-    private bluetooth: BluetoothService) {}
+    private bluetooth: BluetoothService,
+    private database: DatabaseService) {}
 
  async ngOnInit() {
     await this.nativeStorage.getItem("google_user").then(data => {
@@ -31,10 +33,19 @@ export class Tab1Page implements OnInit {
     }, error =>{
       console.log(error);
     })
-    this.bluetooth.initialize().then(() => {
-      console.log('Initialize done');
-      this.bluetooth.enableBluetooth();
-      this.bluetooth.sendMessage();
+    this.bluetooth.initialize().then(s => {
+      if (s) {
+        this.bluetooth.getAddressSubscription().subscribe(data => {
+          console.log(data);
+          this.database.getBasketByLocation(data).subscribe(macdata => {
+            this.bluetooth.setMac(macdata['mac']);
+            console.log('Initialize done');
+            console.log(macdata['mac']);
+            this.bluetooth.enableBluetooth();
+            this.bluetooth.sendMessage();
+          })
+        });
+      }
     });
   }
 
