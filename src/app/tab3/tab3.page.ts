@@ -56,7 +56,7 @@ export class Tab3Page implements OnInit {
         } else {
           this.scannedData = barcodeData.text;
           this.database.getProductTypeByBarcode(this.scannedData).subscribe(material => {
-            this.encodeData = `{"basket":"${material}"}`;
+            this.encodeData = `{"basket":"${material['material']}"}`;
             return this.encodeData;
           }, error => {
             if (error.status == 404) {
